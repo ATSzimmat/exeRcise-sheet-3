@@ -86,6 +86,7 @@ b)  Push your code to this new repository by copying and executing the
     `…or push an existing repository from the command line`.
 c)  Regularly push your latest changes to GitHub again and especially do
     so when you are finished with this sheet.
+    -   Test-change to be pushed to GitHub
 
 ## Exercise 3: Pixar Films (4 Points)
 
