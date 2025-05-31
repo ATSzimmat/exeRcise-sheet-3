@@ -3,10 +3,7 @@ title: "Exercise #3"
 subtitle: "Fortgeschrittene Statistische Software für NF"
 author: "Anton Szimmat (12797237)"
 date: "`r Sys.Date()`"
-output: distill::distill_article
-editor_options: 
-  markdown: 
-    wrap: 72
+output: html_document
 ---
 
 ## General Remarks
