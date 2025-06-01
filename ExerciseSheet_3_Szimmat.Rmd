@@ -247,7 +247,6 @@ response_data <- response_data %>% arrange(cinema_score)
 # Gaining insight into to the modified dataset
 response_data %>% head(10)
 
-
 ```
 
 -   
