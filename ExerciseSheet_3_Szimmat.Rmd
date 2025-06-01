@@ -145,8 +145,6 @@ typeof(pixar_data$film_rating)
 pixar_data$film_rating <- as.factor(pixar_data$film_rating)
 # Checking the type of the variable again
 typeof(pixar_data$film_rating)
-
-
 ```
 
 -   This is appropriate because in R a factor variable has a fixed set
@@ -228,6 +226,27 @@ pixar_data_II
     levels are defined in ascending order, from the lowest to the
     highest score. Combine `public_response` with the `pixar_films`
     dataset using an appropriate merge variable.
+
+```{r}
+# Loading the dataset into R
+library(tidyverse)
+response_data <- read_csv("data/public_response.csv")
+
+# Checking the type of the cinema_score variable
+typeof(response_data$cinema_score)
+
+# Defining the grade levels
+grade_levels <- c("D-", "D", "D+", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", "A+")
+
+# Converting the cinema_score variable into an ordered factor
+response_data$cinema_score <- factor(response_data$cinema_score, levels = grade_levels)
+
+# Sorting the data by cinema_score
+response_data_sorted <- response_data %>% arrange(cinema_score)
+
+# Gaining insight into to the modified dataset
+response_data_sorted %>% head(10)
+```
 
 -   Choose one of the variables representing the public response and
     create a bar plot for the films belonging to a series. Here are the
