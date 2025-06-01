@@ -320,15 +320,16 @@ e)  Use R to answer your chosen question. Please limit your analysis to
     external packages which haven't been introduced.
 
     ```{r}
-    # First some Pivotting and Data Wrangling
+    # Data Wrangling
+
+    #First, the names should be made more manageable
     library(janitor)
     birth_data <- birth_data %>% clean_names()
 
-    # Then some pivotting
-    birth_data_II <- birth_data %>% pivot_wider(names_from = 'entity' ,values_from = births_outside_of_marriage_percent_of_all_births)
+    # Since there is not a measurement for every year for every country included in the dataset, the missing years should be filled
 
-    # The datset should be arranged by year
-    birth_data_II <- birth_data_II %>% arrange(year)
+    # To facilitate this, the data set is first converted to wide format. Moreover the dataset is arranged by year
+    birth_data_II <- birth_data %>% pivot_wider(names_from = 'entity' ,values_from = births_outside_of_marriage_percent_of_all_births) %>% arrange(year)
 
     # Some countries have a very high number of NAs and are considered not to be sufficiently meaningful for the research question (guideline: if more than 1/3 of the values are NAs)
 
@@ -340,96 +341,62 @@ e)  Use R to answer your chosen question. Please limit your analysis to
         where(~ mean(is.na(.)) <= threshold))
     birth_data_III
 
+    # The remaining NAs are replaced by the value of the previous year or, if this is not available (e.g. if the NA occurred in the oldest measurement year of the data set), by the oldest available value
+
     birth_data_IV <- birth_data_III %>%
       fill(-year, .direction = "down") %>%
       fill(-year, .direction = "up")
 
-    # Prüfen ob noch Missings übrig sind
+    # Checking if there are any NAs left
     nrow(birth_data_IV) == nrow(birth_data_V <- birth_data_IV %>% drop_na()) 
 
-
-    # Nun kann der Datensatz in sein ursprüngliches Format zurück
+    # Now the dataset can be converted back to long format
     birth_data_VI <- birth_data_IV %>%  pivot_longer(-year, names_to = "country", values_to = "value")
 
+    # Gaining insight into the modified dataset
+    birth_data_VI %>% head(10)
+    ```
 
+    ```{r}
+    # First we have to create a dataset that shows the country with the highest rate of out of marriage births for each year
+    # If two countries ranked first in this statistic in a year with the same score, both countries will be listed as first place
     birth_data_VI_max <- birth_data_VI %>% group_by(year) %>% 
                          filter(value == max(value)) %>% ungroup()
 
+    # Now we can create a dataset that shows the countries that were most often ranked first in this statistic, in descending order
+    birth_data_VI_max_II <- birth_data_VI_max %>% group_by(year) %>%
+      filter(value == max(value)) %>%  
+      ungroup() %>%
+      count(country, name = "count") %>% 
+      arrange(desc(count))
+
+    # Now the same steps are being taken for the countries with the lowest rate of children born out of marriage
     birth_data_VI_min <- birth_data_VI %>% group_by(year) %>% 
                          filter(value == min(value)) %>% ungroup()
 
+    birth_data_VI_min_II <- birth_data_VI_min %>% group_by(year) %>%
+      filter(value == min(value)) %>%  
+      ungroup() %>%
+      count(country, name = "count") %>% 
+      arrange(desc(count))
     ```
 
-```{r}
-birth_data_VI_max_II <- birth_data_VI_max %>% group_by(year) %>%
-  filter(value == max(value)) %>%  
-  ungroup() %>%
-  count(country, name = "count") %>% 
-  arrange(desc(count))
-# Bei Gleichstand wir der "Punkt" für beide Länder gewertet
-
-birth_data_VI_min_II <- birth_data_VI_min %>% group_by(year) %>%
-  filter(value == min(value)) %>%  
-  ungroup() %>%
-  count(country, name = "count") %>% 
-  arrange(desc(count))
-```
+<!-- -->
 
 d)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
-    correctly label the figure.
-
-    ```{r}
-    # Entwicklung in Europa
-
-    # Zuerst müssen alle nicht-europäischen Länder entfernt werden
-    birth_data_VII <- birth_data_IV %>% clean_names()
-
-    birth_data_VIII <- birth_data_VII %>% select(- new_zealand) 
-    birth_data_VIII <- birth_data_VIII %>% select(-united_states)
-
-    birth_data_VIII <- birth_data_VIII %>%  pivot_longer(-year, names_to = "country", values_to = "value")
-
-
-    ```
+    correctly label the figure
 
 ```{r}
-library(tidyverse)
 
+# Zuerst müssen alle nicht-europäischen Länder entfernt werden
+birth_data_VII <- birth_data_IV %>% clean_names()
 
-# Mittelwert aller Länder außer Iceland berechnen
-birth_data_VIII_avg <- birth_data_VIII %>%
-  filter(country != "iceland") %>%
-  group_by(year) %>%
-  summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
-  mutate(country = "average (excl. Iceland and sweden)")
+birth_data_VIII <- birth_data_VII %>% select(- new_zealand) 
+birth_data_VIII <- birth_data_VIII %>% select(-united_states)
 
-# Werte für Iceland herausfiltern
-data_iceland <- birth_data_VIII %>%
-  filter(country == "iceland")
+birth_data_VIII <- birth_data_VIII %>%  pivot_longer(-year, names_to = "country", values_to = "value")
 
-# Werte für Sweden herausfiltern
-data_sweden <- birth_data_VIII %>%
-  filter(country == "sweden")
-
-#  Alle Datensätze kombinieren
-plot_data <- bind_rows(birth_data_VIII_avg, data_iceland, data_sweden)
-
-#  Plot erstellen
-ggplot(plot_data, aes(x = year, y = value, color = country)) +
-  geom_line() +
-  scale_color_manual(values = c(
-    "average (excl. Iceland and sweden)" = "red",
-    "iceland" = "darkblue",
-    "sweden" = "darkgreen"
-  )) +
-  labs(
-    title = "Vergleich: Mittelwert aller Länder (ohne Iceland), Iceland und Sweden",
-    x = "Jahr",
-    y = "Wert",
-    color = "Linie"
-  ) +
-  theme_minimal()
 
 ```
 
