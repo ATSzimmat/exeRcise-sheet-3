@@ -247,23 +247,29 @@ response_data <- response_data %>% arrange(cinema_score)
 # Gaining insight into to the modified dataset
 response_data %>% head(10)
 
+# Combining the public_response and pixar_films datasets   
+pixar_and_respnse_data <- full_join(pixar_data, response_data, by = "film")
+
+# Gaining insight into to the new dataset
+pixar_and_respnse_data %>% head(10)
 ```
 
--   
+Choose one of the variables representing the public response and create
+a bar plot for the films belonging to a series. Here are the details of
+the plot:
 
--   Choose one of the variables representing the public response and
-    create a bar plot for the films belonging to a series. Here are the
-    details of the plot:
+-   The film series are represented on the x-axis.
+-   Your chosen public response variable is displayed on the y-axis.
+-   Each film in the series is represented as a separate bar. Bars are
+    grouped by film under their respective series on the x-axis. Order
+    the bars within a series according to the release date of the films.
+-   A title and axis labels for context.
 
-    -   The film series are represented on the x-axis.
-    -   Your chosen public response variable is displayed on the y-axis.
-    -   Each film in the series is represented as a separate bar. Bars
-        are grouped by film under their respective series on the x-axis.
-        Order the bars within a series according to the release date of
-        the films.
-    -   A title and axis labels for context.
+```{r}
 
-    What do you notice when comparing the scores of the films in a
+```
+
+-   What do you notice when comparing the scores of the films in a
     series? Do you see any patterns?
 
 ## Exercise 4: Open Analysis (4 points)
