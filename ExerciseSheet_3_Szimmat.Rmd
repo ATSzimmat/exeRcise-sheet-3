@@ -210,7 +210,7 @@ pixar_data_II <- pixar_data_II %>%
                                   "The Good Dinosaur", TRUE ~ film_series)) 
 
 # Now a small correction ...
-pixar_data_III <- pixar_data_II %>% 
+pixar_data_II <- pixar_data_II %>% 
                  mutate(films = case_when(films == "Finding Nemo" ~
   "Finding Nemo, Finding Dory",
   films == "Monsters, Inc." ~ 
@@ -220,7 +220,7 @@ pixar_data_III <- pixar_data_II %>%
   TRUE ~ film_series)) %>% slice(-c(5, 10, 12))
 
 # Output the new dataframe
-View(pixar_data_III)
+pixar_data_II
 ```
 
 -   Load the `public_response` dataframe into R. Convert the
