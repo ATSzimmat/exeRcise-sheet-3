@@ -242,11 +242,15 @@ grade_levels <- c("D-", "D", "D+", "C-", "C", "C+", "B-", "B", "B+", "A-", "A", 
 response_data$cinema_score <- factor(response_data$cinema_score, levels = grade_levels)
 
 # Sorting the data by cinema_score
-response_data_sorted <- response_data %>% arrange(cinema_score)
+response_data <- response_data %>% arrange(cinema_score)
 
 # Gaining insight into to the modified dataset
-response_data_sorted %>% head(10)
+response_data %>% head(10)
+
+
 ```
+
+-   
 
 -   Choose one of the variables representing the public response and
     create a bar plot for the films belonging to a series. Here are the
