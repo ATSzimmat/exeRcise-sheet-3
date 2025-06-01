@@ -380,8 +380,109 @@ d)  Create a meaningful plot / figure with the dataset. Make sure to
     correctly label the figure.
 
     ```{r}
+    # Entwicklung in Europa
+
+    # Zuerst müssen alle nicht-europäischen Länder entfernt werden
+    birth_data_VII <- birth_data_IV %>% clean_names()
+
+    birth_data_VIII <- birth_data_VII %>% select(- new_zealand) 
+    birth_data_VIII <- birth_data_VIII %>% select(-united_states)
+
+    birth_data_VIII <- birth_data_VIII %>%  pivot_longer(-year, names_to = "country", values_to = "value")
+
 
     ```
+
+```{r}
+library(tidyverse)
+
+
+# Mittelwert aller Länder außer Iceland berechnen
+birth_data_VIII_avg <- birth_data_VIII %>%
+  filter(country != "iceland") %>%
+  group_by(year) %>%
+  summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
+  mutate(country = "average (excl. Iceland and sweden)")
+
+# Werte für Iceland herausfiltern
+data_iceland <- birth_data_VIII %>%
+  filter(country == "iceland")
+
+# Werte für Sweden herausfiltern
+data_sweden <- birth_data_VIII %>%
+  filter(country == "sweden")
+
+#  Alle Datensätze kombinieren
+plot_data <- bind_rows(birth_data_VIII_avg, data_iceland, data_sweden)
+
+#  Plot erstellen
+ggplot(plot_data, aes(x = year, y = value, color = country)) +
+  geom_line() +
+  scale_color_manual(values = c(
+    "average (excl. Iceland and sweden)" = "red",
+    "iceland" = "darkblue",
+    "sweden" = "darkgreen"
+  )) +
+  labs(
+    title = "Vergleich: Mittelwert aller Länder (ohne Iceland), Iceland und Sweden",
+    x = "Jahr",
+    y = "Wert",
+    color = "Linie"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+library(tidyverse)
+
+#  Mittelwert aller Länder außer Iceland und Sweden berechnen
+birth_data_VIII_avg_excl <- birth_data_VIII %>%
+  filter(!country %in% c("iceland", "sweden")) %>%
+  group_by(year) %>%
+  summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
+  mutate(country = "Average (excl. Iceland and Sweden)")
+
+#  Mittelwert aller Länder (inkl. Iceland und Sweden)
+birth_data_VIII_avg_all <- birth_data_VIII %>%
+  group_by(year) %>%
+  summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
+  mutate(country = "Average (incl. all countries)")
+
+#  Werte für Iceland herausfiltern
+data_iceland <- birth_data_VIII %>%
+  filter(country == "iceland")
+
+# Werte für Sweden herausfiltern
+data_sweden <- birth_data_VIII %>%
+  filter(country == "sweden")
+
+# Alle Datensätze kombinieren
+plot_data <- bind_rows(
+  birth_data_VIII_avg_excl,
+  birth_data_VIII_avg_all,
+  data_iceland,
+  data_sweden
+)
+
+#  Plot erstellen
+ggplot(plot_data, aes(x = year, y = value, color = country)) +
+  geom_line() +
+  scale_color_manual(values = c(
+    "Average (excl. Iceland and Sweden)" = "red",
+    "Average (incl. all countries)" = "orange",
+    "iceland" = "darkblue",
+    "sweden" = "darkgreen"
+  )) +
+  labs(
+    title = "Vergleich: Durchschnittswerte und Einzelwerte",
+    x = "Jahr",
+    y = "Wert",
+    color = "Linie"
+  ) +
+  theme_minimal()
+
+```
 
 ## Final Note
 
