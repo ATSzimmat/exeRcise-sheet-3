@@ -368,8 +368,6 @@ e)  Use R to answer your chosen question. Please limit your analysis to
     ```
 
 ```{r}
-
-
 birth_data_VI_max_II <- birth_data_VI_max %>% group_by(year) %>%
   filter(value == max(value)) %>%  
   ungroup() %>%
