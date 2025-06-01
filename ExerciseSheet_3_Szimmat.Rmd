@@ -153,20 +153,83 @@ typeof(pixar_data$film_rating)
     of possible values and the film rating variable is based on the MPA
     film rating system which was such afixed set of possible values
 
-b)  Inspect the film titles manually. Which films form a film series? A
-    film series can be identified by a common word in the titles of the
-    films, often in conjunction with a number in the title,
-    e.g. "Despicable Me" and "Despicable Me 2". Create a dataframe which
-    displays a list of the different series with the titles of the films
-    and how many films belong to the series. Output the dataframe.
+Inspect the film titles manually. Which films form a film series? A film
+series can be identified by a common word in the titles of the films,
+often in conjunction with a number in the title, e.g. "Despicable Me"
+and "Despicable Me 2". Create a dataframe which displays a list of the
+different series with the titles of the films and how many films belong
+to the series. Output the dataframe.
 
-c)  Load the `public_response` dataframe into R. Convert the
+```{r}
+# Loading the tidyverse
+library(tidyverse)
+# Inspecting the variable film titles
+pixar_data$film
+```
+
+The following films form a series
+
+-   Cars (Cars, Cars 2, Cars 3)
+
+-   Finding Nemo (Finding Nemo, Finding Dory (because Finding Dory is a
+    Sequel to Finding Nemo))
+
+-   Insight out
+
+-   Lightyear
+
+-   Monsters, Inc. (Monsters, Inc., Monsters University (because
+    Monsters University is a Prequel to Monsters, Inc.))
+
+-   The Incredibles (The Incredibles, Incredibles 2)
+
+-   Toy Story (Toy Story, Toy Story 2, Toy Story 3, Toy Story 4,
+    Lightyear (because Lightyear is a spin-off of the Toy Story series))
+
+```{r}
+# Creating the requested dataframe
+
+# Creating a new variable that displays all the film titles without numbers; also I removed the article "the" from the film names because otherwhise it'll cause troubles
+pixar_data_II <- pixar_data%>%
+  mutate(film_series = str_remove(film, "^(The)\\s"),
+film_series = str_remove(film_series, "\\s\\d+$"))
+
+# Creating a dataframe that displays a list of the different series with the titles of the films and how many films belong to the series
+pixar_data_II <- pixar_data_II %>%
+  group_by(film_series) %>%
+  summarise(
+    films = paste(film, collapse = ", "),
+    count = n())
+
+
+# Now the article "the" is added again to two film series
+pixar_data_II <- pixar_data_II %>%
+                 mutate(film_series = case_when(film_series == "Incredibles" ~
+                                  "The Incredibles",
+                                  film_series == "Good Dinosaur" ~ 
+                                  "The Good Dinosaur", TRUE ~ film_series)) 
+
+# Now a small correction ...
+pixar_data_III <- pixar_data_II %>% 
+                 mutate(films = case_when(films == "Finding Nemo" ~
+  "Finding Nemo, Finding Dory",
+  films == "Monsters, Inc." ~ 
+  "Monsters, Inc., Monsters University", 
+  films == "Toy Story, Toy Story 2, Toy Story 3, Toy Story 4" ~
+  "Toy Story, Toy Story 2, Toy Story 3, Toy Story 4, Lightyear",
+  TRUE ~ film_series)) %>% slice(-c(5, 10, 12))
+
+# Output the new dataframe
+View(pixar_data_III)
+```
+
+-   Load the `public_response` dataframe into R. Convert the
     `cinema_score` variable into a factor while ensuring the factor
     levels are defined in ascending order, from the lowest to the
     highest score. Combine `public_response` with the `pixar_films`
     dataset using an appropriate merge variable.
 
-d)  Choose one of the variables representing the public response and
+-   Choose one of the variables representing the public response and
     create a bar plot for the films belonging to a series. Here are the
     details of the plot:
 
