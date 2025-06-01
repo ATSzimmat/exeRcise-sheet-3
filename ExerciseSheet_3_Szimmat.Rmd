@@ -281,13 +281,22 @@ determining the research question yourself.
 a)  Go to <https://github.com/owid/owid-datasets/tree/master/datasets>
     and choose a dataset that interests you. You can have a look at
     <https://ourworldindata.org/> to gather some inspiration.
+
     -   I have chosen a dataset that shows the proportion of children
         born outside of marriage per year in different countries
+
 b)  Download the dataset and track it in git.
+
+    ```{r}
+    # I will also load the dataset now into R
+    Births_data <- read_csv("data/Births outside of marriage.csv")
+    ```
+
 c)  Put the name / title of the dataset and a link to it below.
 
--   Dataset Name: ...
--   Link: <https://github.com/owid/owid-datasets/>...
+-   Dataset Name: **Births outside of marriage**
+-   Link:
+    <https://github.com/owid/owid-datasets/blob/master/datasets/Births%20outside%20of%20marriage/Births%20outside%20of%20marriage.csv>
 
 d)  Come up with a (research) question you want to answer with the data
     and briefly explain why you believe this is an interesting question
