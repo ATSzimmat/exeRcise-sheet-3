@@ -288,6 +288,8 @@ a)  Go to <https://github.com/owid/owid-datasets/tree/master/datasets>
 b)  Download the dataset and track it in git.
 
     ```{r}
+    # Loading the tidyverse
+    library(tidyverse)
     # I will also load the dataset now into R
     birth_data <- read_csv("data/Births outside of marriage.csv")
 
@@ -320,28 +322,69 @@ e)  Use R to answer your chosen question. Please limit your analysis to
     external packages which haven't been introduced.
 
     ```{r}
-    # First some Data Wrangling
+    # First some Pivotting and Data Wrangling
+    library(janitor)
+    birth_data <- birth_data %>% clean_names()
+
+    # Then some pivotting
+    birth_data_II <- birth_data %>% pivot_wider(names_from = 'entity' ,values_from = births_outside_of_marriage_percent_of_all_births)
+
+    # The datset should be arranged by year
+    birth_data_II <- birth_data_II %>% arrange(year)
+
+    # Some countries have a very high number of NAs and are considered not to be sufficiently meaningful for the research question (guideline: if more than 1/3 of the values are NAs)
+
+    # Remove columns with too many NAs
+    threshold <- 1/3
+    birth_data_III <- birth_data_II %>%
+      select(
+        year,
+        where(~ mean(is.na(.)) <= threshold))
+    birth_data_III
+
+    birth_data_IV <- birth_data_III %>%
+      fill(-year, .direction = "down") %>%
+      fill(-year, .direction = "up")
+    View(birth_data_IV)
+
+    # Prüfen ob noch Missings übrig sind
+    nrow(birth_data_IV) == nrow(birth_data_V <- birth_data_IV %>% drop_na()) 
+
+
+    # Nun kann der Datensatz in sein ursprüngliches Format zurück
+    birth_data_VI <- birth_data_IV %>%  pivot_longer(-year, names_to = "country", values_to = "value")
+
+
+    birth_data_VI_max <- birth_data_VI %>% group_by(year) %>% 
+                         filter(value == max(value)) %>% ungroup()
+
+    View(birth_data_VI_max)
+
+    birth_data_VI_min <- birth_data_VI %>% group_by(year) %>% 
+                         filter(value == min(value)) %>% ungroup()
+
+    View(birth_data_VI_min)
 
     ```
 
 ```{r}
-# Für Länder für die in einem bestimmten Jahr keine Daten gegeben sind, wird angenommen, dass sich der Alkohol-Konsum in diesen jahren nicht verändert hat -> daher wird "NA" durch den jeweils letzten verfügbaren Wert ersetzt
-alk_data_VI  <- alk_data_III %>%
-  mutate(across(everything(), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
-# Nun ist noch ein wenig Data-Wrangling notwendig 
- alk_f9<- alk_data_VI %>%
-  pivot_longer(-TIME_PERIOD, names_to = "Country", values_to = "AlcoholConsumption")
-# Nun wird ein Datensatz konstruiert, in welchem die "Alkohol-stärksten" Nationen für jedes beobachtete Jahr zusamme mit dem Wert, mit dem diese dies "erreicht" haben, aufgelistet sind 
-hoechte_werte <-  alk_f9 %>% group_by(TIME_PERIOD) %>% filter(AlcoholConsumption == max(AlcoholConsumption)) %>% ungroup() 
-hoechte_werte
-# Zuletzt wird ein Datensatz erstellt, wo alle Nationen, die den "Titel" der Nation mit dem höchsten Akohol-Konsum mindestens einmal getragen nach der Anzahl ihrer "Titel" geordnet sind  
-  alk_f8 <- alk_f9 %>% 
-  group_by(TIME_PERIOD) %>%
-  filter(AlcoholConsumption == max(AlcoholConsumption)) %>%  
+
+
+birth_data_VI_max_II <- birth_data_VI_max %>% group_by(year) %>%
+  filter(value == max(value)) %>%  
   ungroup() %>%
-  count(Country, name = "Count") %>% 
-  arrange(desc(Count))
-  alk_f8
+  count(Country, name = "count") %>% 
+  arrange(desc(count))
+# Bei Gleichstand wir der "Punkt" für beide Länder gewertet
+View(birth_data_VI_max_II)
+
+birth_data_VI_min_II <- birth_data_VI_min %>% group_by(year) %>%
+  filter(value == min(value)) %>%  
+  ungroup() %>%
+  count(Country, name = "count") %>% 
+  arrange(desc(count))
+
+View(birth_data_VI_min_II)
 ```
 
 d)  Create a meaningful plot / figure with the dataset. Make sure to
