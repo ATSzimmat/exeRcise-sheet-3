@@ -320,10 +320,31 @@ e)  Use R to answer your chosen question. Please limit your analysis to
     external packages which haven't been introduced.
 
     ```{r}
+    # First some Data Wrangling
 
     ```
 
-f)  Create a meaningful plot / figure with the dataset. Make sure to
+```{r}
+# Für Länder für die in einem bestimmten Jahr keine Daten gegeben sind, wird angenommen, dass sich der Alkohol-Konsum in diesen jahren nicht verändert hat -> daher wird "NA" durch den jeweils letzten verfügbaren Wert ersetzt
+alk_data_VI  <- alk_data_III %>%
+  mutate(across(everything(), ~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+# Nun ist noch ein wenig Data-Wrangling notwendig 
+ alk_f9<- alk_data_VI %>%
+  pivot_longer(-TIME_PERIOD, names_to = "Country", values_to = "AlcoholConsumption")
+# Nun wird ein Datensatz konstruiert, in welchem die "Alkohol-stärksten" Nationen für jedes beobachtete Jahr zusamme mit dem Wert, mit dem diese dies "erreicht" haben, aufgelistet sind 
+hoechte_werte <-  alk_f9 %>% group_by(TIME_PERIOD) %>% filter(AlcoholConsumption == max(AlcoholConsumption)) %>% ungroup() 
+hoechte_werte
+# Zuletzt wird ein Datensatz erstellt, wo alle Nationen, die den "Titel" der Nation mit dem höchsten Akohol-Konsum mindestens einmal getragen nach der Anzahl ihrer "Titel" geordnet sind  
+  alk_f8 <- alk_f9 %>% 
+  group_by(TIME_PERIOD) %>%
+  filter(AlcoholConsumption == max(AlcoholConsumption)) %>%  
+  ungroup() %>%
+  count(Country, name = "Count") %>% 
+  arrange(desc(Count))
+  alk_f8
+```
+
+d)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
     correctly label the figure.
 
