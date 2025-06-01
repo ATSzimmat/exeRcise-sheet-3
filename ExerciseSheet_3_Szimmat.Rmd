@@ -292,8 +292,6 @@ b)  Download the dataset and track it in git.
     library(tidyverse)
     # I will also load the dataset now into R
     birth_data <- read_csv("data/Births outside of marriage.csv")
-
-    View(birth_data)
     ```
 
 c)  Put the name / title of the dataset and a link to it below.
@@ -345,7 +343,6 @@ e)  Use R to answer your chosen question. Please limit your analysis to
     birth_data_IV <- birth_data_III %>%
       fill(-year, .direction = "down") %>%
       fill(-year, .direction = "up")
-    View(birth_data_IV)
 
     # Prüfen ob noch Missings übrig sind
     nrow(birth_data_IV) == nrow(birth_data_V <- birth_data_IV %>% drop_na()) 
@@ -358,12 +355,8 @@ e)  Use R to answer your chosen question. Please limit your analysis to
     birth_data_VI_max <- birth_data_VI %>% group_by(year) %>% 
                          filter(value == max(value)) %>% ungroup()
 
-    View(birth_data_VI_max)
-
     birth_data_VI_min <- birth_data_VI %>% group_by(year) %>% 
                          filter(value == min(value)) %>% ungroup()
-
-    View(birth_data_VI_min)
 
     ```
 
@@ -371,18 +364,15 @@ e)  Use R to answer your chosen question. Please limit your analysis to
 birth_data_VI_max_II <- birth_data_VI_max %>% group_by(year) %>%
   filter(value == max(value)) %>%  
   ungroup() %>%
-  count(Country, name = "count") %>% 
+  count(country, name = "count") %>% 
   arrange(desc(count))
 # Bei Gleichstand wir der "Punkt" für beide Länder gewertet
-View(birth_data_VI_max_II)
 
 birth_data_VI_min_II <- birth_data_VI_min %>% group_by(year) %>%
   filter(value == min(value)) %>%  
   ungroup() %>%
-  count(Country, name = "count") %>% 
+  count(country, name = "count") %>% 
   arrange(desc(count))
-
-View(birth_data_VI_min_II)
 ```
 
 d)  Create a meaningful plot / figure with the dataset. Make sure to
