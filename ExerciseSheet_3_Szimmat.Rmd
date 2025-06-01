@@ -103,7 +103,55 @@ a)  Load the `pixar_films` dataset into R. Clean the dataset by removing
     the possible values and what do they mean? Create a factor variable
     for the film rating. Why is this appropriate?
 
-<!-- -->
+```{r}
+# Loading the dataset into R
+library(tidyverse)
+pixar_data <- read_csv("data/pixar_films.csv")
+
+# Revoming every film without a title
+pixar_data <- pixar_data %>% filter(!is.na(film))
+
+# Inspecting the variable film_rating
+pixar_data$film_rating
+```
+
+-   The variable film_rating shows the suitability of a film for certain
+    audiences based on its content. The possible values are based on the
+    Motion Picture Association (MPA) film rating system.
+
+-   There are 5 possible ratings in which the films can be classified
+    (source: <https://www.filmratings.com/>)
+
+    -   "G" (General Audiences) means that all are ages admitted
+
+    -   "PG" (Parental Guidance Suggested) means that there is some
+        material in the film that may not be suitable for children
+
+    -   "PG-13" (Parents Strongly Cautioned) means that some material in
+        the film may be inappropriate for children under 13
+
+    -   "R" (Restricted) means that *under 17 requires accompanying
+        parent or adult guardian.* The film contains some adult
+        material. Parents are urged to learn more about the film before
+        taking their young children with them
+
+    -   "NC-17" (Adults Only) means that the film is suitable only for
+        persons older than 17 years . Children are not admitted
+
+```{r}
+# Checking the type of the variable
+typeof(pixar_data$film_rating)
+# Creating a factor variable for the variable
+pixar_data$film_rating <- as.factor(pixar_data$film_rating)
+# Checking the type of the variable again
+typeof(pixar_data$film_rating)
+
+
+```
+
+-   This is appropriate because in R a factor variable has a fixed set
+    of possible values and the film rating variable is based on the MPA
+    film rating system which was such afixed set of possible values
 
 b)  Inspect the film titles manually. Which films form a film series? A
     film series can be identified by a common word in the titles of the
