@@ -294,7 +294,7 @@ b)  Download the dataset and track it in git.
 
 c)  Put the name / title of the dataset and a link to it below.
 
--   Dataset Name: **Births outside of marriage**
+-   Dataset Name: Births outside of marriage
 -   Link:
     <https://github.com/owid/owid-datasets/blob/master/datasets/Births%20outside%20of%20marriage/Births%20outside%20of%20marriage.csv>
 
