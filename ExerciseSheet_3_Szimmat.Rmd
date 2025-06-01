@@ -289,7 +289,9 @@ b)  Download the dataset and track it in git.
 
     ```{r}
     # I will also load the dataset now into R
-    Births_data <- read_csv("data/Births outside of marriage.csv")
+    birth_data <- read_csv("data/Births outside of marriage.csv")
+
+    View(birth_data)
     ```
 
 c)  Put the name / title of the dataset and a link to it below.
@@ -302,13 +304,32 @@ d)  Come up with a (research) question you want to answer with the data
     and briefly explain why you believe this is an interesting question
     within one sentence. It should be a question that can be answered
     with the dataset and using R.
+
+    -   My research question will be: "In which of the countries studied
+        was the proportion of births out of marriage the highest or
+        lowest in most years?" The aim is to determine the five
+        countries with the highest and lowest proportions for each year.
+    -   This research question seems interesting to me, among other
+        things, because the birth rate allows, to a certain extent,
+        statements about, for example, the dominant values of a country
+        or how much it is valued to have children only in marriage.
+
 e)  Use R to answer your chosen question. Please limit your analysis to
     the functions and techniques we have covered so far in the course.
     You are **not expected** to use advanced statistical models or
     external packages which haven't been introduced.
+
+    ```{r}
+
+    ```
+
 f)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
     correctly label the figure.
+
+    ```{r}
+
+    ```
 
 ## Final Note
 
