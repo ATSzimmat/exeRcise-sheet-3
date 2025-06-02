@@ -3,7 +3,7 @@ title: "Exercise #3"
 subtitle: "Fortgeschrittene Statistische Software für NF"
 author: "Anton Szimmat (12797237)"
 date: "`r Sys.Date()`"
-output: distill::distill_article
+output: html_document
 ---
 
 ## Exercise 1: Initializing git (4 Points)
@@ -399,7 +399,7 @@ ggplot(plot_data, aes(x = year, y = value, color = country)) +
 
 -   As you can see in the plot, the values ​​for Sweden and Iceland are consistently above the average for European countries (both with and without Sweden and Iceland).
 
--    While the difference between these two countries' values ​​and the European average was still quite small in the first years covered by the dataset (especially in Sweden), it rose rapidly, (especially in the 1970s), and is still clearly visible in the figures for the 2010s.
+-   While the difference between these two countries' values ​​and the European average was still quite small in the first years covered by the dataset (especially in Sweden), it rose rapidly, (especially in the 1970s), and is still clearly visible in the figures for the 2010s.
 
 ## Final Note
 
