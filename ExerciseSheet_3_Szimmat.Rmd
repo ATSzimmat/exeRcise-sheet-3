@@ -238,9 +238,9 @@ Choose one of the variables representing the public response and create a bar pl
 ```{r}
 # First, the dataset needs to be adjusted a little
 pixar_and_respnse_data_II <- pixar_and_respnse_data %>% select(series, film, release_date, rotten_tomatoes)
-# Die Filme, für die kein Rotten Tomatoes Rating verfügbar ist, werden herausgestrichen
+# The films for which no Rotten Tomatoes rating is available should be removed
 pixar_and_respnse_data_II <- pixar_and_respnse_data_II %>% drop_na()
-
+# Ensuring that the films within a series are sorted by release date
 pixar_and_respnse_data_II <- pixar_and_respnse_data_II %>% arrange(series, release_date) %>%
  mutate(film = factor(film, levels = unique(film)))
 ```
@@ -264,7 +264,7 @@ response_plot
 
 What do you notice when comparing the scores of the films in a series? Do you see any patterns?
 
--    As can be seen in the plot, the individual films in a series received similar ratings (e.g., all Toy Story films received almost 100 percentage points, while all three Cars films performed relatively poorly). Furthermore, it can be observed that in most cases, in a series with multiple films, the sequels always performed worse than their predecessors, and the series thus performed worse as the number of films increased.
+-   As can be seen in the plot, the individual films in a series received similar ratings (e.g., all Toy Story films received almost 100 percentage points, while all three Cars films performed relatively poorly). Furthermore, it can be observed that in most cases, in a series with multiple films, the sequels always performed worse than their predecessors, and the series thus performed worse as the number of films increased.
 
 ## Exercise 4: Open Analysis (4 points)
 
