@@ -359,7 +359,7 @@ birth_data_VIII <- birth_data_VIII %>%  pivot_longer(-year, names_to = "country"
 birth_data_VIII  %>% head(10)
 ```
 
-```{r message=FALSE, fig.cap="Correlation between danceability and necessary physical activity while dancing to it?"}
+```{r message=FALSE, fig.cap="Rate of out-of-marraige-births in Europe compared to Sweden and Iceland (1960-2014)"}
 # Now the plot will be created
 library(tidyverse)
 
@@ -400,10 +400,9 @@ ggplot(plot_data, aes(x = year, y = value, color = country)) +
     "iceland" = "darkblue",
     "sweden" = "darkgreen")) +
   labs(
-    title = "Vergleich: Durchschnittswerte und Einzelwerte",
     x = "Year",
-    y = "Wert",
-    color = "line")
+    y = "Rate of out-of-marraige-births",
+    color = "Legend")
 
 ```
 
