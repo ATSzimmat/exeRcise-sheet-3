@@ -86,6 +86,9 @@ pixar_data <- read_csv("data/pixar_films.csv")
 # Revoming every film without a title
 pixar_data <- pixar_data %>% filter(!is.na(film))
 
+# Gaining insight into to the new dataset
+pixar_data %>% head(10)
+
 # Inspecting the variable film_rating
 pixar_data$film_rating
 ```
@@ -157,7 +160,6 @@ pixar_data_II <- pixar_data_II %>%
     films = paste(film, collapse = ", "),
     count = n())
 
-
 # Now the article "the" is added again to two film series
 pixar_data_II <- pixar_data_II %>%
                  mutate(film_series = case_when(film_series == "Incredibles" ~
@@ -175,8 +177,8 @@ pixar_data_II <- pixar_data_II %>%
   "Toy Story, Toy Story 2, Toy Story 3, Toy Story 4, Lightyear",
   TRUE ~ film_series)) %>% slice(-c(5, 10, 12))
 
-# Output the new dataframe
-pixar_data_II
+# Output the first 10 lines of new dataframe
+pixar_data_II %>% head(10)
 ```
 
 ### c)
@@ -244,6 +246,8 @@ Download the dataset and track it in git.
 library(tidyverse)
 # I will also load the dataset now into R
 birth_data <- read_csv("data/Births outside of marriage.csv")
+# Gaining insight into the dataset
+birth_data %>% head(10)
 ```
 
 ### c)
@@ -314,6 +318,8 @@ birth_data_VI_max_II <- birth_data_VI_max %>% group_by(year) %>%
   ungroup() %>%
   count(country, name = "count") %>% 
   arrange(desc(count))
+# Gaining insight into the final table
+birth_data_VI_max_II
 
 # Now the same steps are being taken for the countries with the lowest rate of children born out of marriage
 birth_data_VI_min <- birth_data_VI %>% group_by(year) %>% 
@@ -324,6 +330,8 @@ birth_data_VI_min_II <- birth_data_VI_min %>% group_by(year) %>%
   ungroup() %>%
   count(country, name = "count") %>% 
   arrange(desc(count))
+# Gaining insight into the final table
+birth_data_VI_min_II
 ```
 
 ### f)
@@ -347,6 +355,8 @@ birth_data_VIII <- birth_data_VII %>% select(-new_zealand)
 birth_data_VIII <- birth_data_VIII %>% select(-united_states)
 # And finally, some pivotting is necessary
 birth_data_VIII <- birth_data_VIII %>%  pivot_longer(-year, names_to = "country", values_to = "value")
+# Gaining insight into the modified dataset
+birth_data_VIII  %>% head(10)
 ```
 
 ```{r message=FALSE}
