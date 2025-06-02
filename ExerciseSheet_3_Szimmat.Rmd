@@ -387,69 +387,91 @@ d)  Create a meaningful plot / figure with the dataset. Make sure to
     provide a figure caption (via the chunk options / Rmarkdown) and
     correctly label the figure
 
+    -   In this exercise I'll create a plot which shows the development
+        of rate of out of marriage births for each year in Europe (at
+        least from the European countries included in the dataset and
+        that don't have too many NAs)
+
+    -   Since, as shown in the last exercise, Iceland and Sweden had the
+        highest rates across all years included in the data set, these
+        countries should receive special attention in the plot
+
+    -   To illustrate the development across Europe, we will first
+        calculate the average of the values for all European countries
+        for each year. To highlight the developments in Sweden and
+        Iceland, there should also be calculated an average excluding
+        Sweden and Iceland
+
 ```{r}
-
-# Zuerst müssen alle nicht-europäischen Länder entfernt werden
+# But first the data set needs to be adjusted a bit
+library(janitor)
+library(tidyverse)
+# First, names should be made more manageable
 birth_data_VII <- birth_data_IV %>% clean_names()
-
-birth_data_VIII <- birth_data_VII %>% select(- new_zealand) 
+# Then, all non-European countries should be removed
+birth_data_VIII <- birth_data_VII %>% select(-new_zealand) 
 birth_data_VIII <- birth_data_VIII %>% select(-united_states)
-
+# And finally, some pivotting is necessary
 birth_data_VIII <- birth_data_VIII %>%  pivot_longer(-year, names_to = "country", values_to = "value")
-
-
 ```
 
 ```{r}
+# Now the plot will be created
 library(tidyverse)
 
-#  Mittelwert aller Länder außer Iceland und Sweden berechnen
+# Calculatung the average of all European countries 
+birth_data_VIII_avg_all <- birth_data_VIII %>%
+  group_by(year) %>%
+  summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
+  mutate(country = "average (incl. all countries)")
+
+# Calculating the average of all European countries except Iceland and Sweden
 birth_data_VIII_avg_excl <- birth_data_VIII %>%
   filter(!country %in% c("iceland", "sweden")) %>%
   group_by(year) %>%
   summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
-  mutate(country = "Average (excl. Iceland and Sweden)")
+  mutate(country = "average (excl. iceland and sweden)")
 
-#  Mittelwert aller Länder (inkl. Iceland und Sweden)
-birth_data_VIII_avg_all <- birth_data_VIII %>%
-  group_by(year) %>%
-  summarise(value = mean(value, na.rm = TRUE), .groups = "drop") %>%
-  mutate(country = "Average (incl. all countries)")
-
-#  Werte für Iceland herausfiltern
+# Calculating values only for Iceland
 data_iceland <- birth_data_VIII %>%
   filter(country == "iceland")
 
-# Werte für Sweden herausfiltern
+# Calculating values only for Sweden 
 data_sweden <- birth_data_VIII %>%
   filter(country == "sweden")
 
-# Alle Datensätze kombinieren
+# Combining all datasets
 plot_data <- bind_rows(
   birth_data_VIII_avg_excl,
   birth_data_VIII_avg_all,
   data_iceland,
-  data_sweden
-)
+  data_sweden)
 
-#  Plot erstellen
+# Creating the plot
 ggplot(plot_data, aes(x = year, y = value, color = country)) +
   geom_line() +
   scale_color_manual(values = c(
-    "Average (excl. Iceland and Sweden)" = "red",
-    "Average (incl. all countries)" = "orange",
+    "average (excl. iceland and sweden)" = "red",
+    "average (incl. all countries)" = "orange",
     "iceland" = "darkblue",
-    "sweden" = "darkgreen"
-  )) +
+    "sweden" = "darkgreen")) +
   labs(
     title = "Vergleich: Durchschnittswerte und Einzelwerte",
     x = "Jahr",
     y = "Wert",
-    color = "Linie"
-  ) +
-  theme_minimal()
+    color = "Linie")
 
 ```
+
+-   As you can see in the plot, the values ​​for Sweden and Iceland are
+    consistently above the average for European countries (both with and
+    without Sweden and Iceland).
+
+-    While the difference between these two countries' values ​​and the
+    European average was still quite small in the first years covered by
+    the dataset (especially in Sweden), it rose rapidly, (especially in
+    the 1970s), and is still clearly visible in the figures for the
+    2010s.
 
 ## Final Note
 
