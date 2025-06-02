@@ -359,7 +359,7 @@ birth_data_VIII <- birth_data_VIII %>%  pivot_longer(-year, names_to = "country"
 birth_data_VIII  %>% head(10)
 ```
 
-```{r message=FALSE, fig.cap="Rate of out-of-marraige-births in Europe compared to Sweden and Iceland (1960-2014)"}
+```{r message=FALSE, fig.cap=" Fig. 1: Rate of out-of-marraige-births in Europe compared to Sweden and Iceland (1960-2014)"}
 # Now the plot will be created
 library(tidyverse)
 
