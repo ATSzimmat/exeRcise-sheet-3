@@ -145,7 +145,7 @@ The following films form a series
 
 -   Toy Story (Toy Story, Toy Story 2, Toy Story 3, Toy Story 4, Lightyear (because Lightyear is a spin-off of the Toy Story series))
 
-```{r message=FALSE}
+```{r}
 # Creating the requested dataframe
 
 # Creating a new variable that displays all the film titles without numbers; also I removed the article "the" from the film names because otherwhise it'll cause troubles
@@ -172,13 +172,19 @@ pixar_data_II <- pixar_data_II %>%
                  mutate(films = case_when(films == "Finding Nemo" ~
   "Finding Nemo, Finding Dory",
   films == "Monsters, Inc." ~ 
-  "Monsters, Inc., Monsters University", 
+  "Monsters Inc., Monsters University", 
   films == "Toy Story, Toy Story 2, Toy Story 3, Toy Story 4" ~
-  "Toy Story, Toy Story 2, Toy Story 3, Toy Story 4, Lightyear",
-  TRUE ~ film_series)) %>% slice(-c(5, 10, 12))
+  "Toy Story, Toy Story 2, Toy Story 3, Toy Story 4, Lightyear", TRUE ~ films)) %>% slice(-c(5, 10, 12))
 
 # Output the first 10 lines of new dataframe
 pixar_data_II %>% head(10)
+
+# For the next exercises we'll need the table in a different format
+pixar_data_III <- pixar_data_II %>% mutate(film_series = case_when(film_series == "Monsters, Inc." ~ "Monsters Inc.", TRUE ~ film_series))
+pixar_long <- pixar_data_III %>%
+  separate_rows(films, sep = ",\\s*") %>% rename(film = films, series =   film_series) %>% select(series, film)
+# Gaining insight into to the new dataset
+pixar_long %>% head(10)
 ```
 
 ### c)
@@ -202,11 +208,20 @@ response_data$cinema_score <- factor(response_data$cinema_score, levels = grade_
 # Sorting the data by cinema_score
 response_data <- response_data %>% arrange(cinema_score)
 
+# A small correction
+pixar_data <- pixar_data %>% mutate(film = case_when(film == "Monsters, Inc." ~ "Monsters Inc.", TRUE ~ film))
+response_data <- response_data %>% mutate(film = case_when(film == "Monsters, Inc." ~ "Monsters Inc.", TRUE ~ film))
+
+# Adding the releasedate
+
+pixar_release <- pixar_data %>% select(film,release_date)
+pixar_release_II <- full_join(pixar_long, pixar_release, by = "film")
+
 # Gaining insight into to the modified dataset
 response_data %>% head(10)
 
-# Combining the public_response and pixar_films datasets   
-pixar_and_respnse_data <- full_join(pixar_data, response_data, by = "film")
+# Combining the pixar_long  and public_response datasets   
+pixar_and_respnse_data <- full_join(pixar_release_II, response_data, by = "film")
 
 # Gaining insight into to the new dataset
 pixar_and_respnse_data %>% head(10)
@@ -222,7 +237,27 @@ Choose one of the variables representing the public response and create a bar pl
 -   A title and axis labels for context.
 
 ```{r}
+# Loading the tidyverse
+library(tidyverse)
 
+# I choose the variable 
+
+resonse_plot <- ggplot(data = response_data, aes())
+
+
+resonse_plot
+
+
+Test_Visualisierung_1 <- ggplot(data = Test_Daten, mapping = aes(
+    x = respid,
+    y = lm02))+ 
+  geom_line() +
+  labs(
+  title = "Test-Visualiserung",
+  subtitle = "Mit Überschriften und Achsenbeschriftung",
+x = "Identifikationsnummer",
+y = "Fernsehdauer pro Tag in Minuten")
+Test_Visualisierung_1
 ```
 
 -   What do you notice when comparing the scores of the films in a series? Do you see any patterns?
