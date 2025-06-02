@@ -229,38 +229,42 @@ pixar_and_respnse_data %>% head(10)
 
 ### d)
 
-Choose one of the variables representing the public response and create a bar plot for the films belonging to a series. Here are the details of the plot:
+Choose one of the variables representing the public response and create a bar plot for the films belonging to a series. Here are the details of the plot: The film series are represented on the x-axis. Your chosen public response variable is displayed on the y-axis. Each film in the series is represented as a separate bar. Bars are grouped by film under their respective series on the x-axis. Order the bars within a series according to the release date of the films. A title and axis labels for context.
 
--   The film series are represented on the x-axis.
--   Your chosen public response variable is displayed on the y-axis.
--   Each film in the series is represented as a separate bar. Bars are grouped by film under their respective series on the x-axis. Order the bars within a series according to the release date of the films.
--   A title and axis labels for context.
+-   I chose the variable rotten_tomatoes
+
+-   In the Rotten Tomatoes rating system, films are awarded a percentage points from 0 to 100. The higher the percentage score, the better it is rated.
 
 ```{r}
-# Loading the tidyverse
-library(tidyverse)
+# First, the dataset needs to be adjusted a little
+pixar_and_respnse_data_II <- pixar_and_respnse_data %>% select(series, film, release_date, rotten_tomatoes)
+# Die Filme, für die kein Rotten Tomatoes Rating verfügbar ist, werden herausgestrichen
+pixar_and_respnse_data_II <- pixar_and_respnse_data_II %>% drop_na()
 
-# I choose the variable 
-
-resonse_plot <- ggplot(data = response_data, aes())
-
-
-resonse_plot
-
-
-Test_Visualisierung_1 <- ggplot(data = Test_Daten, mapping = aes(
-    x = respid,
-    y = lm02))+ 
-  geom_line() +
-  labs(
-  title = "Test-Visualiserung",
-  subtitle = "Mit Überschriften und Achsenbeschriftung",
-x = "Identifikationsnummer",
-y = "Fernsehdauer pro Tag in Minuten")
-Test_Visualisierung_1
+pixar_and_respnse_data_II <- pixar_and_respnse_data_II %>% arrange(series, release_date) %>%
+ mutate(film = factor(film, levels = unique(film)))
 ```
 
--   What do you notice when comparing the scores of the films in a series? Do you see any patterns?
+```{r}
+# Generate a random array of colors that is suitable for colorblind people
+library(Polychrome)
+palette_pixar<- createPalette(15, c("#000000", "#FFD700"))
+names(palette_pixar) <- unique(pixar_and_respnse_data_II$series)
+
+# Creating the plot; for better readability of the plot, the label of the X axis was rotated by 90 degrees and the legend was moved to the position above the plot 
+response_plot <- ggplot(pixar_and_respnse_data_II, aes(x = film, y = rotten_tomatoes, fill = series)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(x = "film", y = "Rotten Tomatoes Score", title = "Rotten Tomatoes Ratings for different Pixar Films") + 
+  theme(legend.position = "top") +
+  scale_fill_manual(values = palette_pixar)
+
+response_plot
+```
+
+What do you notice when comparing the scores of the films in a series? Do you see any patterns?
+
+-    As can be seen in the plot, the individual films in a series received similar ratings (e.g., all Toy Story films received almost 100 percentage points, while all three Cars films performed relatively poorly). Furthermore, it can be observed that in most cases, in a series with multiple films, the sequels always performed worse than their predecessors, and the series thus performed worse as the number of films increased.
 
 ## Exercise 4: Open Analysis (4 points)
 
