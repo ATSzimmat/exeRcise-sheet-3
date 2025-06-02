@@ -359,7 +359,7 @@ birth_data_VIII <- birth_data_VIII %>%  pivot_longer(-year, names_to = "country"
 birth_data_VIII  %>% head(10)
 ```
 
-```{r message=FALSE}
+```{r message=FALSE, fig.cap="Correlation between danceability and necessary physical activity while dancing to it?"}
 # Now the plot will be created
 library(tidyverse)
 
@@ -401,15 +401,15 @@ ggplot(plot_data, aes(x = year, y = value, color = country)) +
     "sweden" = "darkgreen")) +
   labs(
     title = "Vergleich: Durchschnittswerte und Einzelwerte",
-    x = "Jahr",
+    x = "Year",
     y = "Wert",
-    color = "Linie")
+    color = "line")
 
 ```
 
 -   As you can see in the plot, the values ​​for Sweden and Iceland are consistently above the average for European countries (both with and without Sweden and Iceland).
 
--   While the difference between these two countries' values ​​and the European average was still quite small in the first years covered by the dataset (especially in Sweden), it rose rapidly, (especially in the 1970s), and is still clearly visible in the figures for the 2010s.
+-   While the difference between these two countries' values ​​and the European average was still quite small in the first years covered by the dataset (especially in Sweden), it rose rapidly, (especially in the 1970s and 1980s), and is still clearly visible in the figures for the 2010s.
 
 ## Final Note
 
