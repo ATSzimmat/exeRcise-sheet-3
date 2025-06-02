@@ -246,7 +246,7 @@ pixar_and_respnse_data_II <- pixar_and_respnse_data_II %>% arrange(series, relea
 ```
 
 ```{r}
-# Generate a random array of colors that is suitable for colorblind people
+# Generating of a random color palette that is suitable for color-blind people, but also does not represent a color gradient that could impair the readability of the graph
 library(Polychrome)
 palette_pixar<- createPalette(15, c("#000000", "#FFD700"))
 names(palette_pixar) <- unique(pixar_and_respnse_data_II$series)
