@@ -38,13 +38,13 @@ For all of the following tasks in this exercise sheet we ask you to always commi
 
 Name 2 strengths and 2 weaknesses of git. (Don't forget to create a commit after this answer, see 1c)
 
--   Two Strengths of git
+-   Two strengths of git
 
     -   Git is really great for collaboration with other users and if you want to understand the changes done by other the persons you work with
 
     -   In most cases, Git prevents you from deleting code or other changes on a file by accident
 
--   Two Weaknesses of git
+-   Two weaknesses of git
 
     -   Git often struggles with binary files
 
