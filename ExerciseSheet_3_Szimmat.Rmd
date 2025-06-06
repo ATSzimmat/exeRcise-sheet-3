@@ -430,7 +430,7 @@ ggplot(plot_data, aes(x = year, y = value, color = country)) +
     "average (excl. iceland and sweden)" = viridis_colors[1], 
     "average (incl. all countries)" = viridis_colors[2],
     "iceland" = viridis_colors[3], 
-    "sweden" = viridis_colors[4],)) +
+    "sweden" = viridis_colors[4])) +
   labs(
     x = "Year",
     y = "Rate of out-of-marraige-births",
