@@ -1,0 +1,6 @@
+"0","# Loading the tidyverse"
+"0","library(tidyverse)"
+"0","# I will also load the dataset now into R"
+"0","birth_data <- read_csv(""data/Births outside of marriage.csv"")"
+"0","# Gaining insight into the dataset"
+"0","birth_data %>% head(10)"

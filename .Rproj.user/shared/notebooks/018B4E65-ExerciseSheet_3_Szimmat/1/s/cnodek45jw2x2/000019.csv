@@ -1,0 +1,6 @@
+"0",""
+"0","# Combining the pixar_long  and public_response datasets   "
+"0","pixar_and_respnse_data <- full_join(pixar_release_II, response_data, by = ""film"")"
+"0",""
+"0","# Gaining insight into to the new dataset"
+"0","pixar_and_respnse_data %>% head(10)"

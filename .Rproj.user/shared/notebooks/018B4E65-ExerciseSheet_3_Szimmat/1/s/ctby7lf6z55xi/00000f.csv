@@ -1,0 +1,7 @@
+"0","# First, the dataset needs to be adjusted a little"
+"0","pixar_and_respnse_data_II <- pixar_and_respnse_data %>% select(series, film, release_date, rotten_tomatoes)"
+"0","# The films for which no Rotten Tomatoes rating is available should be removed"
+"0","pixar_and_respnse_data_II <- pixar_and_respnse_data_II %>% drop_na()"
+"0","# Ensuring that the films within a series are sorted by release date"
+"0","pixar_and_respnse_data_II <- pixar_and_respnse_data_II %>% arrange(series, release_date) %>%"
+"0"," mutate(film = factor(film, levels = unique(film)))"

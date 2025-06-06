@@ -1,0 +1,7 @@
+"0",""
+"0","# For the next exercises we'll need the table in a different format"
+"0","pixar_data_III <- pixar_data_II %>% mutate(film_series = case_when(film_series == ""Monsters, Inc."" ~ ""Monsters Inc."", TRUE ~ film_series))"
+"0","pixar_long <- pixar_data_III %>%"
+"0","  separate_rows(films, sep = "",\\s*"") %>% rename(film = films, series =   film_series) %>% select(series, film)"
+"0","# Gaining insight into to the new dataset"
+"0","pixar_long %>% head(10)"

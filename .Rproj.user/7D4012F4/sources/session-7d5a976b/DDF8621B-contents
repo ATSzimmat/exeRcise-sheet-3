@@ -1,0 +1,712 @@
+---
+title: "Grundlagen_Stat_Soft"
+author: "Anton Szimmat (12797237)"
+date: "2025-05-03"
+output: html_document
+---
+
+## Packages laden
+
+```{r}
+# Package installieren
+install.packages("Package_Name")
+# Package auswwählen
+library(Package_Name)
+# Nun kann das Package verwendet werden
+```
+
+## Herausfinden, in welchem Projekt man sich gerade befindet
+
+```{r}
+getwd()
+```
+
+## Informationen über Objekte und Fehler herausfinden
+
+```{r}
+# Informationen über Objekte
+?Objekt_Name 
+# Rainer installieren
+install.packages("remotes")
+library(remotes)
+install_github("soda-lmu/rainer")
+install.packages("cli") 
+library(rainer)
+# Sprache von Rainer ändern
+rainer:::language
+# Mit Hilfe von Rainer genauere Informationen über Fehler erhalten
+r_error() 
+
+# Andere Taktiken zum Debugging
+
+# Die allermeisten Fehler sind Syntax - Fehler
+# Im Szenario, in dem man eine Fehlermeldunhg erhält. gibt es mehrere Möglichkeiten dieses Problem zu lösen
+#       1) Code exakt durchlesen (z. B. nach Rechtschreibfehlern oder fehlenden Zeichhen)
+#       2) Fehlermeldung durchlesen - oft enthält diese hilfreiche Informationen zur Entdeckug von Fehlern
+#       3) Fehlermeldun´ng in Google kopieren (Vielleicht hatten andere dieses Problem auch schon)
+#       4) Schritt nacheinander ausführen und so nah Problemen suchen
+#       5) Andere Personen fragen
+# Es gibt noch weitre fortgeschrittenee Methoden (Advanced Debugging)
+#       6) browser() -> erlaubt es bestimmte Code Sektionn zu inspizieren 
+#       7) options (error = recover) -> R startet automatisch den Browser, wenn es etwas findet 
+```
+
+## Best Pratices
+
+-   Generell
+
+    -   Es wird empfohlen Variablennamen möglichst simpel und spezifisch zu halten -\> wenn man Variablen näher derfiniert, dann eher "\_" als "." verwenden
+
+    -   Kommentare werden stark empfohlen
+
+-   Für Visualisierungen
+
+    -   Allgmein können Pfeile usw. hilfreich sein, da die besten Visualisierungen "eine Geschichte erzählen"
+
+    -   Beschriftung
+
+        -   Immer Plots beschriften
+
+        -   Immer Titel, Untertitel, Legenden hinzufügen
+
+        -   Achsen kurz und klar (nicht zu detailliert) und möglichst mit Einheiten beschriften
+
+        -   Bei nicht numerischen Achsen (also die als Faktoren auftauschen) sollte man, wenn es eine ordinale Reihenfolge gibt diese auch einhalten
+
+        -   Wenn eine Achse (z. B. x-Achse) nicht geordnet werden kann, dann kann es Sinn ergeben, diese einfach nach der Größe der y-Achse zu ordnen
+
+    -   Farben
+
+        -   Semantik/Assoziationen (z. B. rot mit schlecht und grün mit gut oder Parteien mit Farben) -\> dies macht es leichter zu lesen
+
+        -   Man sollte darauf achten einigermaßen Farbblind-freundlich zu sein
+
+        -   Farben sollten zu Daten passen (Sequential (d.h. wenn eine Variable mehr wird, sollte man einfach **eine** Farbe immer weiter in der Deckkraft weiter erhöhen ), Diverging (das heißt weiß ist die neutralere Mitte und nach beiden Richtungen in einer Farbe mit zunehmender Deckkraft (z. B. bei Temperatur), Qualitative (das heißt, wenn man meherere Kategorien hat, sollten diese klar unterschiedliche Farben haben - hier wäre z. B. sequential nicht sinnvoll, weil dies ja immer eine Art Reiehnfolge impliziert) )
+
+        -   Möglichst uniforme Farbsklaen für kontinuierliche S k a l e n (das heißt, dass wenn man in der Wahrnehmung eine bestimmte Reihenfolge vermutet, sollte auch die Skala die Wahrnehumung widerspiegeln - also tatsächlich immer dunkler werden für z. B. höhere Werte - also Regenbogen wäre jetzt z. B: nicht zu empfehlen) (dies ist aber in GG Plot eingebaut)
+
+    -   Verhältnis zwische"Signal (das was man mit dem Plot sagen will) vs. Noise (Andere eher überflüssige Informationen)" ("Manchmal ist weniger mehr")
+
+        -   Man sollte in den Plots keine unnötigen Effekte einbauen (keine doppelten Erklärungen von Achsen, keine §de Effekte, keine unnötige Fräbung des Hintergrunds etc.) -\> ein Plot sollt nur komplizierter gemacht werden, wenn es der Aussage des Plots dient
+
+        -   Dieser minimalistische Ansatz kann z. B. auch beim Highlighten von verschiedenen Sachen von großer Bedeutung sein
+
+## Einige grundlegende Funktionen
+
+```{r}
+# Rechnen mit R
+
+x_1 <- 8
+y_1 <- 10
+z_1 <- 4
+variable_1 <- c(23,354,38,45,347,56,13,67)
+# Addition
+x_1+y_1
+# Multiplikation
+x_1*y_1
+# Dividieren
+x_1/y_1
+# Subtrahieren
+x_1-y_1
+# Gruppen addieren
+sum(x_1,y_1,z_1)
+# Variable aufaddieren
+sum(variable_1)
+# Zusammenhang zwischen 2 Variablen graphisch überprüfen
+library(tidyverse)
+ggplot(mtcars) + geom_point(aes(x = cyl, y= hp ))
+# Pearson- Bravais Korrelationskoeffizient
+cor(mtcars$cyl, mtcars$hp)
+# Spearman Korrelationskoeffizient
+cor(mtcars$cyl, mtcars$hp, method = "spearman")
+# Wichtig ist sich zu merken, dass R nicht überprüft, ob die entsprechende Berechnung unter diesen Umständen Sinn ergibt 
+
+# Lineare Regressionsmodelle
+# Lineares Modell berechnen
+mpg_hp_regression <- lm(mpg  ~ hp , data = mtcars )
+mpg_hp_regression
+# Koeffizienten eines Modells schätzen
+summary(mpg_hp_regression)
+# Klasse des Modells herausfinden
+class(mpg_hp_regression)
+# Y-Werte mit Hilfe von X Werten vorhersagen
+vorherzusagende_Daten <- data.frame(hp = c(100, 200, 300))
+predict(mpg_hp_regression, newdata = vorherzusagende_Daten)
+vorherzusagende_Daten  
+
+```
+
+## Grundlegendes Arbeiten mit Daten
+
+```{r}
+# Datei Formate
+#     1) CSV ("Comma seperaated Value")
+#     2) Json (anderes von recht vielen Formaten)
+#     3) dta (Beispiel für importierte Sets aus anderen Programmen (z. B. hier STATA))
+
+# Datentypen 
+#     1) Double -> für nicht runde Zahlen
+#     2) Integer -> nur ganze Zahlen enthaltend (z. B. Bevölkerungszahlen)
+#     3) Numerical -> für alle Zahlen geeignet (z. B. Preise)
+#     4) Character -> v. a. für Textdaten
+#     5) factor   -> Abzählbare mögliche Ausprägungen und vorher wohldefinierte Ausprägungen -> also hat z. B.   
+#         Befragter nur eine bestimmte Anzahö an Antowortmöglichkeiten)
+#     6) Logical  -> kann Wert TRUE und FALSE annehmen (z. B. binäre Klassifizierung)
+#     7) Date     -> Datum
+# R hat Schwierigkeiten Factor und character/ Factor und numeric bzw. integer zu unterscheiden
+
+```
+
+```{r}
+# Daten Laden
+# Tidyverse installieren
+install.packages("tidyverse")
+# Funktionen zum lesen von CSV-Daten auswählen
+library(tidyverse)
+# Im Projekt dann einen Ordner mit dem Namen "data" einrichten und die Daten-Dateien dort ablegen
+# Danach die Daten neu bennenen
+Neuer_Daten_Name <- read_csv("data/Origninaler_Daten_Name_.csv")
+# Wichtig ist dabei, dass sich der data-Ordner im selben Projekt-Ordner, der nicht in einem anderen Ordner, sondern nur unter dem Benutzer gespeichert ist, wie die gerade bearbeitete Datei befindet
+```
+
+```{r}
+# Grundlegende Funktionen für Daten
+# Die Befehle sollen an folgenden Beispieldaten gezeigt werden
+library(tidyverse)
+library(haven)
+Test_Daten<- read_dta("data/ZA5280_v2-0-1.dta")
+
+# Einblick in Daten erhalten
+View(Test_Daten)
+# Die ersten Zeilen eines Datebsatzes einsehen
+head (Test_Daten, n = 11)
+# Die letzten Zeilen eiens Datensatzes einsehen
+tail (Test_Daten, n = 9)
+# Die Struktur des DataSets anzeigen lassen (also v. a. die Spaltennamen)
+str(Test_Daten)
+
+# Zeilen- und Spaltenanzahl eines datasets
+library(tidyverse)
+# Spaltenanzahl
+Test_Daten%>% ncol()
+# Zeilenanzahl
+Test_Daten %>% nrow()
+
+# Spalten oder Zeilen auswählen
+library(tidyverse)
+# Einzelne Spalte auswählen
+Test_Spalte <- Test_Daten$la01
+# Mehrere spalten auswählen
+Test_Auswahl <- select(Test_Daten,la0, eastwest)
+# Natürlich muss man jenen Objekten nicht unbedingt Namen zuweisen
+
+# Weitere Funktionen zum auswählen von Daten
+library(tidyverse)
+# Bestimmte Variablen entfernen für die man sich nicht interessiert
+Test_Daten %>% select(-la01)
+# Bestimmtes Intervall von Spalten nehmen
+Test_Daten %>% select(eastwest:la01)
+View(Test_Daten %>% select(eastwest:la01))
+# Spalten nehmen, die mit einem bestimmten Buchstaben anfangen
+Test_Daten %>% select(starts_with("l")) 
+View(Test_Daten  %>% select(starts_with("l")))
+# Spalten nehmen, die mit einem bestimmten Buchstaben enden
+Test_Daten %>% select(ends_with("1")) 
+View(Test_Daten%>% select(ends_with("1")))
+
+# Zeilen nach Eigenschaften auswählen
+library(tidyverse)
+Test_Daten_2 <- Test_Daten%>% filter(eastwest==1)
+nrow(Test_Daten_2)
+# Einzelne Zeilen nach Nummern auswählen
+Test_Daten_3 <- Test_Daten %>% slice (1:5)
+View (Test_Daten_3)
+
+# Mit einzelnen Zeilen oder Spalten arbeiten
+# Am Beispiel
+Test_Spalte
+# Arithmetisches Mittel einer Spalte berechnen
+mean(Test_Spalte)
+# Maximum einer Spalte (bei diesem DataSet etwas verbuggt)
+max(Test_Spalte)
+# Minimum einer Spalte (bei diesem DataSet etwas verbuggt)
+min(Test_Spalte)
+# Varianz 
+var (Test_Spalte)
+# Standardabweichung einer Spalte
+sd (Test_Spalte)
+# Interquartilsabstand
+IQR (Test_Spalte)
+# Modus
+# hat keinen Befehlssco in R -> höchstens mit table ( ) kann man arbeiten
+# Einiges dieser Funktionen zusammengefasst
+summary (Test_Spalte)
+
+
+```
+
+## Data Wrangling
+
+```{r}
+# Was ist das Ziel?
+
+# tidy-data (das Format der Daten, mit dem man am besten arbeiten kann), hat folgende Eigenschaften
+#   1) Jede Variable -> 1 Spalte
+#   2) Jede Beobachtung -> 1 Zeile
+#   3) Jede Tabellenzelle -> 1 Wert
+
+# Sowohl unaufgeräumte Data Sets aufzuräumen als auch aufgeräumte Data Sets an die Bedürfnisse der eigenen Arbeit anzupasen wird als Data Wrangling bezeichnet -> hierzu Tidyverse besinders gut geeignet
+
+# Datentyp anpassen
+
+# Ist eine Spalte numeric?
+is.numeric(Test_Spalte)
+# Ist eine Spalte Character?
+is.character(Test_Spalte)
+# Was ist der Variablen-Typ einer Spalte?
+typeof(Test_Spalte)
+# Variablentyp ändern
+Test_Spalte <- as.character(Test_Spalte)
+typeof(Test_Spalte)
+# Variablentyp zurück ändern
+Test_Spalte <- as.double(Test_Spalte)
+typeof(Test_Spalte)
+
+```
+
+```{r}
+# Datensätze nach Eigenschaften sortieren
+library(tidyverse)
+# Datensätze nach einem Wert in aufsteigender Reihenfolge sortieren
+Test_Auswahl %>% arrange(la01)
+# Datensätze nach einem Wert in absteigender Reihenfolge sortiere
+Test_Auswahl %>% arrange(desc(la01))  
+
+```
+
+```{r}
+# Neue Spalten erstellen
+library(tidyverse)
+# Ja/ Nein Spalte erstellen
+Test_Auswahl_2 <-Test_Auswahl %>% mutate(viele_Buecher= ifelse(la01 > 3, 1, 0))
+View(Test_Auswahl_2) 
+# Neue Spalte erstellen
+Test_Auswahl_3 <- Test_Auswahl %>% mutate(wie_viele_Buecher=
+                                              case_when(la01 < 3 ~ "wenig",
+                                                        la01 > 2 & la01 < 4 ~ "mittel",
+                                                        la01  > 3 ~ "viele"))
+View(Test_Auswahl_3) 
+
+# Spalten editieren
+library(tidyverse)
+# Neue Spaltennamen (der neue Spaltenname wird zuerst genannt)
+View(Test_Auswahl)
+Test_Auswahl_4 <- Test_Auswahl %>% rename(Buecheranzahl = la01, 
+                                                  Osten_oder_Westen = eastwest)
+View(Test_Auswahl_4)
+
+# Spalteneinträge für bestimmte Kategorien ändern 
+# Hier ist noch eine kleine Anpassung notwendig
+Test_Auswahl$eastwest <- as.character(Test_Auswahl$eastwest)
+Test_Auswahl_5 <- Test_Auswahl %>% mutate(eastwest = recode(eastwest , '2' = "Westen", '1' = "Osten"))
+View(Test_Auswahl_5)
+```
+
+```{r}
+# Mit Missungs umgehen
+# Genauer Wert, der durch NA ersetzt werden soll
+Test_Auswahl$la01 <- Test_Auswahl$la01 %>% na_if(3)
+View(Test_Auswahl)
+
+# Fragen ,ob ein bestimmter Wert NA ist
+Test_Auswahl %>% is.na()
+
+# Alle Zeilen löschen, die ein NA enthalten
+Test_Auswahl_7 <- Test_Auswahl %>% na.omit()
+nrow(Test_Auswahl)
+nrow(Test_Auswahl_7)
+
+
+# Alle NAs werden durch einen bestimmten Wert ersetzen
+Test_Auswahl <- Test_Auswahl %>% mutate(across(everything(), ~ replace_na(.x, 3)))
+nrow(Test_Auswahl)
+View(Test_Auswahl)
+```
+
+```{r}
+# Pivoting (Wie man zwischen Long und Wide hin und her wechseln kann)
+library(tidyverse)
+# Typischerweise tidy das beste, aber z. B. bei ggplot long oder wide besser
+# Hier werden die in R enthaltenen Tabellen "table1", table2" verwendet
+
+# Long -> Wide (id_cols (R muss wissen, dass 2 Spalten zusammengehören) nicht unbedingt benötigt)
+View(table2)
+table2_tidy <- table2 %>% pivot_wider(
+          names_from = type,
+          values_from = count)
+View(table2_tidy)
+# "Man nimmt die Namen, die in der Long-Spalte unter type aufgeführt sind und kombiniert sie mit den Werten, die unter der count -Spalte auf Höhe der Namen aufgefühhrt sind "
+
+# Wide -> long (table 1 entspricht table_2_tidy) (cols als Spalten, die wir entfernen wollen)
+View(table1)
+table1_long <- table1 %>% pivot_longer(
+              cols = c(cases, population),
+              names_to = "name",
+              values_to = "value")
+View(table1_long)
+# "Man nimmt die beiden Spalten cases und Population und ordnet deren Namen unter dem neuen Spaltennamen type und listet die jeweiigen Werte unter count auf "
+
+# u n t e r   U m s t ä n d e n  kann man es sogar noch longer machen, indem man z. B. zu cases und population noch´h year dazu schreibt 
+# um Daten zu verändern ist es nicht unüblich Daten vom long ins wide Format oder umgekehrt zu bringen, und dann wieder zurück zu bringen, weil zwischendrin so die Konvertierung manchmal leichter ist
+
+# Das ganze System ist aber nicht perfekt - es gibt DataSets, die nicht ohne Informationsverlust zu haben sind
+
+```
+
+```{r}
+# Seperate (Wen die Einträge einer Tabelle eigentlich 2 Variablen enthalten die durch ein / getrennt sind)
+library(tidyverse)
+# Hier wird die in R enthaltenen Tabellen "table3" verwendet
+View(table3)
+# In table 3 ist bei table3$rate sind 2 Variablen in einer Spalte mit / geteilt
+table3 %>% separate(rate, into = c("cases", "population"))
+# Mit dem sep Argument kann man vorgeben, wie die Werte getrennt werden sollen 
+
+```
+
+```{r}
+# Mehrere Datensätze verbinden 
+# Zuerst wird das Tidyverse geladen
+library(tidyverse)
+# Danach werden einige Datensätze erstellt
+df_1 <- data.frame(Landkreis_ID = c(12100:12105),
+                   Masern_Impfrate = c(0.75,0.55,0.93,0.86,0.79,0.22))
+df_2 <- data.frame(Landkreis_ID = c(12102:12108),
+                   Bevölkerung = c(4573818,454888,987611,2311,67890,77800,341233))
+df_3 <- data.frame(ID = c(1:10),
+                   zufriedenheit_beginn = c(2,5,7,5,10,1,6,4,4,9))
+df_4 <- data.frame(ID = c(3,4,5,8,10),
+                  zufriedenheit_ende = c(1,3,2,10,9))
+df_5 <- data.frame(ID = c(30,40,50,60,70,80),
+                   jahre_in_unternehmen = c(2,3,12,1,0.5,7))
+
+df_6 <- data.frame(ID = c(10,20,30,40,50),
+                   gehalt = c(3500,4000,2000,2400,8000))
+df_7 <- data.frame(Sozialversicherungsnummer = c(12345,23456,34567,45678),
+                   Erwerbsstatus = c("berufstätig","pensioniert","arbeitslos","berufstätig"))
+df_8 <- data.frame(Sozialversicherungsnummer = c(12345,23456,45678,56789,67891,78912),
+                Haftdauer_monate = c(12,36,4,15,18,40))
+df_9 <- data.frame(ID = c(100:105),
+                   Erstwohnsitz = c("Frankfurt","Berlin","Mönchengladbach","Regensburg","Berlin","Bad Tölz"))
+df_10<- data.frame(ID = c(99,100,104,105,117,196),
+                   Zweitwohnsitz = c("München","München","München","München","München","München"))
+df_11 <- data.frame(Matrikelnummer = c(1:6),
+                 Note = c(2,3.3,1,2.7,5.0,2.0))
+df_12 <- data.frame(Matrikelnummer = c(7:10),
+                   Note = c(4,3,2.7,1.3))
+df_13 <- data.frame(Erstversuch = c(TRUE,TRUE,FALSE,TRUE,TRUE,
+                                    TRUE,FALSE,FALSE,TRUE,FALSE))
+df_12_1 <- data.frame(Matrikelnummer = c(7:10),
+                    Note = c(4,3,2.7,1.3),
+                    Semester = c(1,3,1,9))
+
+#left join (Man nimmt Beobachtungen aus df_1, fügt die Variablen aus df_2 hinzu und gibt für alle Variablen die Werte für die Beobachtungen aus df_1 an, soweit diese verfügbar sind)
+df_1
+df_2
+left_join(df_1,df_2, by = "Landkreis_ID")
+
+#right join (Man nimmt Beobachtungen aus df_2, fügt die Variablen aus df_1 hinzu und gibt für alle Variablen die Werte für die Beobachtungen aus df_2 an, soweit diese verfügbar sind)
+df_1
+df_2
+right_join(df_1,df_2, by = "Landkreis_ID")
+#Die beiden Funktionen sind austauschbar, die untenstehende Funktion führt zum gleichen Resultat wie right_join oben 
+left_join(df_2,df_1, by = "Landkreis_ID")
+
+```
+
+```{r}
+# Inner join (Nur Beobachtungen, die in beiden Datensätzen da. sind werden berücksichtigt)
+df_3
+df_4
+inner_join(df_3, df_4, by = "ID")
+
+# Full join (Alle Beobachtungen werden berücksichtigt und Fehlendes mit NA aufgefüllt)
+df_5
+df_6
+full_join(df_5, df_6, by = "ID")
+
+# Semi join (Nur Beobachtungen die in df_7 und df_8 vertreten sind, aber nur die Variablen auf df_8 werden übernommen)
+df_7
+df_8
+semi_join(df_7, df_8, by = "Sozialversicherungsnummer")
+
+```
+
+```{r}
+# Anti join (Man nimmt df_9 und filtert daraus alle heraus, die in df_10 vertreten sind)
+df_9
+df_10
+anti_join(df_9, df_10, by ="ID")
+
+# rbind und cbind
+install.packages("plyr")
+# rbind (man hängt einfach den einen Datensatz unten an den anderen heran (geht natürlich nur bei den selben Variablen))
+df_12
+df_11
+rbind(df_12, df_11)
+#rbind.fill (Wenn die Datensätze unterschiedliche Variablen haben, dann können sie mit diesem Befehl untereinander gehängt werden und das fehlende mit NA aufgefüllt werden )
+df_11
+df_12_1
+df_14 <- plyr::rbind.fill(df_11,df_12_1)
+df_14
+df_14 <- plyr::rbind.fill(df_12_1,df_11)
+df_14
+# cbind (Man hängt den Datensatz links bzw. rechts neben den anderen Datenatz)
+df_13
+df_14  
+cbind(df_13, df_14)
+#Achtung! Reihenfolge wichtig, weil hier keine ID Variable gegeben ist, wie weiter vorher 
+
+```
+
+## Visualisierungen
+
+```{r}
+# Line-Plot (hier werden aesthetics gebraucht, so wie meistens, wenn Visualisierung erstellt werden soll )
+Test_Visualisierung_1 <- ggplot(data = Test_Daten, mapping = aes(
+    x = respid,
+    y = lm02))+ 
+  geom_line() +
+  labs(
+  title = "Test-Visualiserung",
+  subtitle = "Mit Überschriften und Achsenbeschriftung",
+x = "Identifikationsnummer",
+y = "Fernsehdauer pro Tag in Minuten")
+Test_Visualisierung_1
+
+# Scatter-Plot (hier werden aesthetics gebraucht, so wie meistens, wenn Visualisierung erstellt werden soll )
+Test_Visualisierung_2 <- ggplot(data = Test_Daten, mapping = aes(
+    x = respid,
+    y = lm02))+ 
+  geom_point() +
+  labs(
+  title = "Test-Visualiserung",
+  subtitle = "Mit Überschriften und Achsenbeschriftung",
+x = "Identifikationsnummer",
+y = "Fernsehdauer pro Tag in Minuten")
+Test_Visualisierung_2
+
+```
+
+## Mehrere Graphen vereinigen
+
+```{r}
+# Facets
+library(tidyverse)
+# Split by generosity 
+metal_happiness %>% mutate(generosity_group = if_else(generosity > median(generosity),"higher", "lower")) %>% 
+# Plot hierfür erstellen
+ggplot(aes(x= metal_bands_per_capita , y= score, color = generosity_group)) + geom_point() + 
+  labs(x= "Metal Bands per Capita", 
+       y= "Happiness Score") +
+    geom_smooth(method = lm) + 
+  facet_wrap(vars(generosity_group))
+# mit scales = " free" in facet_wrap kann man unterschiedliche Skalen verwenden 
+```
+
+```{r}
+# Wie man einen Plot mit mehreren Variablen als Linie, Fläche ... baut, wobei jede Variable eine eigene Farbe bekommt          
+library(tidyverse)
+geburten_data <- read_csv("data/open-data-munchen-klinik_geburten_bearbeitet_2024.csv")
+
+geburten_data_2 <- geburten_data %>% pivot_longer(cols = c(Neugeborene_in_Muenchen, Geburten_in_der_Muenchner_Klinik ), names_to = "type", values_to = "values")
+
+View(geburten_data_2)
+
+geburten_area <- ggplot(data = geburten_data_2, aes(x = Jahr, y = values, color = type)) + geom_line()
+
+plot(geburten_area)
+
+```
+
+## Group_by, Collapse und Summarize
+
+```{r}
+# Summarize (Ähnlich wie mutate(), aber es fasst mehrere Reihen zusammen )
+# erstellt neue Tablle mit den entsprechenden Werten 
+# Hier wird die in R enthaltene Tabelle table1 verwendet
+library(tidyverse)
+View(table1)
+
+table1_2 <- table1 %>% summarise(mean(table1$cases), n = n())
+View(table1_2)
+# mutate würde nicht zusammenfassen
+table1_3 <- table1 %>% mutate(mean(table1$cases), n = n())
+View(table1_3)
+
+```
+
+```{r}
+# Group_by
+# Damit kann man summarse() gruppieren  
+# Wenn man mehrmals mutate() mit %>% verkettet, bleibt ein group_by, was man für ein vorheriges mutate() verwendet hat erhalten, ebi summarise () ist das anders  
+# Zeigt auch die Häufigkeit der Gruppen an  
+# Nun zum Mittelwert von vorhin
+table1_neu <- table1 %>% group_by(country)
+# Nun zum Mittelwert von vorhin
+table1_2_neu <- table1_neu %>% summarise(mean(table1_neu$cases), n = n())
+View(table1_2_neu)
+# man kann auch die Funktion table () auf diese Art und Weise bauen 
+
+
+# Zur Wichtigkeit von group_by ( )
+table1_4 <- table1 %>% group_by(year) %>% mutate(population_mean = mean(population),
+                                      population_diff = population - mean (population))
+View(table1_4)
+# Ohne group_by  ... 
+table1_6 <-  table1 %>% mutate(population_mean = mean(population),
+                                      population_diff = population - mean (population))
+View(table1_6)
+# Ohne group_by ( ) wird einfach gerechnet ... 
+(19987071 + 20595360 + 172006362 + 174504898 + 1272915272 + 1280428583) /6
+
+
+# Mit ungroup () diese Gruppierung aufheben
+table1_8 <- table1 %>% group_by(year) %>% mutate (population_mean_year = mean (population), population_diff_year = population - population_mean_year 
+) %>% 
+  ungroup() %>% 
+mutate(
+  population_mean_overall = mean(population),
+  population_diff_overall = population - population_mean_overall
+) 
+View(table1_8)
+```
+
+```{r}
+# Collapsee
+
+# Kurzer Exkurs zu paste () mit collapse ...
+
+paste("A", "B", "C", "x")
+
+paste(c("A", "B", "C"), "x")
+
+paste (c("A", "B", "C"), "x", collapse = "-")
+
+```
+
+## Eigene Funktionen
+
+```{r}
+# Eine Funktion hat immer einen speziellen Input und einen speziellen Output
+calculate_bmi <- function (height_in_m, weight_in_kg) {bmi <- weight_in_kg / (height_in_m^2)
+return(bmi)}
+# Hier wäre bmi die Outputgröße und height_in_m und weigtht_in_kg die INputgröße
+# Das return bräuchte man in R nicht unbedingt, aber in vielen anderen Programmiersprachen bräuchte man dies
+# Wenn man die Funktion ohne Klammern hinschreibt, kann man sich auch den Code zur Funktion anzeigen lassen
+calculate_bmi 
+
+# Im Tidyverse kann man Funktionen auch folgendermaßen aufbauen
+library(tidyverse)
+calculate_bmi_kurz <-. %>% select(name, height, mass) %>% mutate(bmi = calculate_bmi(height_in_m = height/100, weight_in_kg = mass
+)) 
+# Auf Daten angewandt ...
+starwars %>% calculate_bmi_kurz()
+calculate_bmi_kurz
+# Der Punkt steht hierbei für einen bestimmten Datensatz
+# Mit %>% wird dieser Datensatz in die Funktionen select() und mutate() weitergegeben, welche eine Funktion enthält
+# Die Funktion erstellt also im starwars Datensatz eigenständig eine Spalte, für welche jene Funktion dann ausgeführt wird
+# Es wird allgmein empfohlen, die Funktionen mit selbst erstellten Daten zu testen bevor man sie anwendet
+
+```
+
+## Conditionals
+
+```{r}
+# If, also wenn dann ... 
+# Dies verwendet man, um Code zu schreiben, der sich verändert, wenn eine Variablen einen bestimmten Wert annehmen
+library(tidyverse)
+diese_zahl <- 5
+if (diese_zahl == 5) {print ("Diese Zahl ist 5")}
+
+# Im Gegensatz zu ...
+diese_andere_zahl <- 6
+if (diese_andere_zahl == 5) {print ("Diese Zahl ist 5")}
+
+# Man kann auch angeben, was passieren soll, wenn jene Bedingung nicht erfüllt ist
+diese_zahl <- 5
+if (diese_zahl == 5) {print ("Diese Zahl ist 5")} else 
+{print ("Diese Zahl ist nicht 5")}
+
+# Im Gegensatz zu
+diese_andere_zahl <- 6
+if (diese_andere_zahl == 5) {print ("Diese Zahl ist 5")} else {print ("Diese Zahl ist nicht 5")}
+
+# Nun zur Anwendung in Funktionen 
+calculate_bmi_flex <- function(height, weight_in_kg, unit = "m") {if (unit == "cm"){
+  height_in_m <- height/100 }
+  else {hieght_in_m <- height} 
+
+bmi <- weight_in_kg/ (height_in_m^2)
+return(bmi)
+}
+
+# Nun zu else if (einer Art inklusivem Oder)
+# Zur Verwendung von else if
+calculate_bmi_flex_2 <- function(height, weight_in_kg, unit = "m") {if (unit == "cm"){
+  height_in_m <- height/100 }
+  else if (unit == "m") {height_in_m <- height }
+  else {stop(paste("Die Einheit" ,unit, "wird hier nicht unterstützt"))} 
+
+bmi <- weight_in_kg/ (height_in_m^2)
+return(bmi)
+}
+```
+
+## Arbeiten mit Textdaten
+
+```{r}
+# Wir müssen einiges vorbereiten
+library(tidyverse)
+customers <- data.frame(anrede = c("Frau","Herr","Herr","Frau"),
+                        vorname = c("Sandra","Peter","Quentin","Trixiee"),
+                        nachname = c("Petersen","Schmidt","Miller","Jackson" ),
+                        adresse = c("Hauptstraße 5","Feldweg 177","Fischergasse 9",
+                                    "Kirchberger Alee 1011"),
+                        plz_stadt = c("9875 Berlin","5349 Hamburg","3425 Bremen",
+                                      "73465 München" ) )
+View(customers)
+
+library(tidyverse)
+# Entahlten die Vornamen ein "e"? 
+str_detect(customers$vorname, "e")
+# Nun wollen wir Frau und Herr durch Fr. und Hr. ersetzen ...
+customers$anrede_neu <- str_replace(customers$anrede, "Frau", "Fr.")
+customers$anrede_neu <- str_replace(customers$anrede_neu , "Herr", "Hr.")
+View(customers)
+# Wie viele "e" enthalten die verschiedenen Vornamen? 
+str_count(customers$vorname, "e")
+# "ZUsammenkleben des Inhalt einzelner Spalten zueinander, doch man muss allerdings angeben, wodurch der übertragene Inhalt jewils getrennt werden sollte (und dies in "" setzen )"
+customers$adresse_komplett <- str_c(customers$anrede_neu, customers$vorname, customers$nachname, customers$adresse, customers$plz_stadt, sep= "  ", collapse = NULL)
+View(customers)
+# Wie lang sind die Nachnamen
+str_length(customers$nachname)
+# In diesem Kontext ist es auch leicht diese Information in einer neuen Spalte aufzuschreiben
+customers$laenge_nachname <- str_length(customers$nachname)
+
+# Nun gibt es noch eine Art eigene kleine Sparache für Textdaten mit der man auch einige komplexere Fragestellungen beantworten kann
+library(tidyverse)
+# Ist ein Leerzeichen in customers$plz_stadt enthalten?? 
+str_detect(customers$plz_stadt, "\\s" )
+# Ist eine Zahl in customers$plz_stadt enthalten?? 
+str_detect(customers$plz_stadt, "\\d" )
+# Sind die Zahlen 1,3 oder 5 in allen Zeilen von der Spalte ecustomers$plz_stadt enthalten?? 
+str_detect(customers$plz_stadt, "[1,3,5]")  
+# Beginnt ein Element dieser Spalte mit 1, 3 oder 5??
+str_detect(customers$plz_stadt, "^[1,3,5]") 
+# Endet ein Element dieser Spalte mit n? 
+str_detect(customers$plz_stadt, "[n$]") 
+# B oder 2 - kann auch gemischt werden ? (Also ist im  S t r i n g  ein B oder " enthalten? )
+str_detect(customers$plz_stadt, "[B, 2]")
+
+```
