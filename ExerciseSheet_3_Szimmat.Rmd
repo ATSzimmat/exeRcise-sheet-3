@@ -364,6 +364,8 @@ birth_data_VI_min_II <- birth_data_VI_min %>%
 birth_data_VI_min_II
 ```
 
+-   As you can see in the tables, the countries among the studied countries with the highest proportion of births out of marriage in most years were Iceland (54 years) and Sweden (3 years) while the studied countries with the lowest proportion of births out of marriage in most years were Cyprus (46 years) and Greece (9 years).
+
 ### f)
 
 Create a meaningful plot / figure with the dataset. Make sure to provide a figure caption (via the chunk options / Rmarkdown) and correctly label the figure
