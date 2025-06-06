@@ -150,7 +150,7 @@ The following films form a series
 
 -   Toy Story (Toy Story, Toy Story 2, Toy Story 3, Toy Story 4, Lightyear (because Lightyear is a spin-off of the Toy Story series))
 
-```{r}
+```{r message=FALSE}
 # Creating the requested dataframe
 
 # Creating a new variable that displays all the film titles without numbers; also I temporarily removed the article "the" from the film names because otherwhise it'll cause troubles
@@ -233,7 +233,7 @@ Choose one of the variables representing the public response and create a bar pl
 
 -   In the Rotten Tomatoes rating system, films are awarded a percentage points from 0 to 100. The higher the percentage score, the better it is rated.
 
-```{r}
+```{r message=FALSE}
 # First, the dataset needs to be adjusted a little
 pixar_and_response_data_II <- pixar_and_response_data %>% select(series, film, release_date, rotten_tomatoes)
 # The films for which no Rotten Tomatoes rating is available should be removed
@@ -243,7 +243,7 @@ pixar_and_response_data_II <- pixar_and_response_data_II %>% arrange(series, rel
  mutate(film = factor(film, levels = unique(film)))
 ```
 
-```{r}
+```{r message=FALSE}
 # Generating of a random color palette that , thanks to the Polychrome package, is suitable for color-blind people, but also does not represent a color gradient that could impair the readability of the graph
 palette_pixar<- createPalette(15, c("#000000", "#FFD700"))
 names(palette_pixar) <- unique(pixar_and_response_data_II$series)
@@ -340,7 +340,7 @@ birth_data_VI <- birth_data_IV %>%  pivot_longer(-year, names_to = "country", va
 birth_data_VI %>% head(10)
 ```
 
-```{r}
+```{r message=FALSE}
 # First we have to create a dataset that shows the country with the highest rate of out of marriage births for each year
 # If two countries ranked first in this statistic in a year with the same score, both countries will be listed as first place
 birth_data_VI_max <- birth_data_VI %>% group_by(year) %>% 
