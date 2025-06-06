@@ -165,7 +165,7 @@ pixar_data_II <- pixar_data_II %>%
     films = paste(film, collapse = ", "),
     count = n())
 
-# Now the article "the" is added again to two film series
+# Now the article "The" is added again to two film series
 pixar_data_II <- pixar_data_II %>%
                  mutate(film_series = case_when(film_series == "Incredibles" ~
                                   "The Incredibles",
