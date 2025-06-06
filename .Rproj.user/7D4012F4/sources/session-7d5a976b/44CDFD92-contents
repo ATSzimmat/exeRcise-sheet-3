@@ -419,7 +419,11 @@ plot_data <- bind_rows(
   data_iceland,
   data_sweden)
 
+# Defining colors from the discreet viridis palette
+viridis_colors <- viridisLite::viridis(4, option = "D")
+
 # Creating the plot
+
 ggplot(plot_data, aes(x = year, y = value, color = country)) +
   geom_line() +
   scale_color_manual(values = c(

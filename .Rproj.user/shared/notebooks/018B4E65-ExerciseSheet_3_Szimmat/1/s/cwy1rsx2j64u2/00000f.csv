@@ -1,0 +1,8 @@
+"0","# Loading the dataset into R"
+"0","pixar_data <- read_csv(""data/pixar_films.csv"")"
+"0",""
+"0","# Revoming every film without a title"
+"0","pixar_data <- pixar_data %>% filter(!is.na(film))"
+"0",""
+"0","# Gaining insight into to the new dataset"
+"0","pixar_data %>% head(10)"
